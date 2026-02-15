@@ -1,4 +1,4 @@
 remake:
-	rm -f server client
-	gcc server.c -lcrypto -o server
-	gcc client.c -lcrypto -o client
+	rm -f Server Client
+	gcc server.c -lcrypto -o Server
+	gcc client.c -lcrypto -o Client

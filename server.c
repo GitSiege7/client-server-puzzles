@@ -67,11 +67,11 @@ int main(int argc, char *argv[]) {
 
     // read challenge and diffculty
 
-    int *challengeLen = malloc(sizeof(int));
-    char *challenge = Read_File(challengeFilename, challengeLen);
+    int challengeLen;
+    char *challenge = Read_File(challengeFilename, &challengeLen);
 
-    int *difficultyLen = malloc(sizeof(int));
-    char *difficulty = Read_File(difficultyFilename, difficultyLen);
+    int difficultyLen;
+    char *difficulty = Read_File(difficultyFilename, &difficultyLen);
 
     // write challenge and difficulty
 
