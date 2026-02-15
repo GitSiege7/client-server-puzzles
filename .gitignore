@@ -1,10 +1,8 @@
 helper.c
 TestVectors_Puzzle/*
-puzzle_challenge.txt
-puzzle_k.txt
 Client
 Server
 Verify
-Challenge*.txt
-Difficulty*.txt
 verify.sh
+*.log
+*.txt

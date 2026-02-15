@@ -2,7 +2,7 @@ gcc server.c -lssl -lcrypto -o Server
 gcc client.c -lssl -lcrypto -o Client
 gcc verify.c -lssl -lcrypto -o Verify
 
-for i in 1 2 
+for i in 1 2
 do
 ./Server Challenge$i.txt Difficulty$i.txt >> Server$i.log
 ./Client puzzle_challenge.txt puzzle_k.txt >> Client$i.log

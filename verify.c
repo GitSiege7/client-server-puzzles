@@ -4,6 +4,11 @@
 #include <openssl/sha.h>
 #include <openssl/evp.h>
 
+void handlerErr(char *msg){
+    printf("ERROR: %s\n", msg);
+    exit(1);
+}
+
 char* Read_File(const char *filename, int *length) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -88,7 +93,30 @@ int Write_File(const char *filename, const char *data) {
     return 0;
 }
 
-int main(char *argv[], int argc) {
+int valid(int d, char *h) {
+    int bytes = d / 8;
+    int bits = d % 8;
+
+    for (int i = 0; i < bytes; i++) {
+        if (h[i] != 0) {
+            // fail
+            return 0;
+        }
+    }
+
+    if (bits > 0) {
+        unsigned char mask = (0xFF << (8 - bits));
+        if ((h[bytes] & mask) != 0) {
+            // fail
+            return 0;
+        }
+    }
+
+    // success
+    return 1;
+}
+
+int main(int argc, char *argv[]) {
     
     // check args
     if (argc != 4) {
@@ -107,7 +135,34 @@ int main(char *argv[], int argc) {
     int difficulty = Read_Int_From_File(difficultyFilename);
     
     // read solution nonce
-    
+    int nonceLen;
+    char *nonce = Read_File(nonceFilename, &nonceLen);
 
-    return 0;
+    // concat challenge hex + nonce hex
+    int concatLen = challengeLen + strlen(nonce);
+    char *data = malloc(concatLen);
+    strcpy(data, challenge);
+    strcat(data, nonce);
+
+    // convert concat hex to bytes
+    int byteLen = concatLen/2;
+    char *bytes = malloc(byteLen);
+
+    Hex_to_Bytes(data, bytes, strlen(data));
+
+    // compute SHA
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+
+    int ok = Compute_SHA256(bytes, byteLen, hash);
+    if (ok != 0) {
+        handlerErr("SHA256 failed");
+    }
+
+    if (valid(difficulty, hash)) {
+        Write_File("verification_result.txt", "ACCEPT\n");
+        exit(0);
+    } else {
+        Write_File("verification_result.txt", "REJECT\n");
+        exit(1);
+    }
 }

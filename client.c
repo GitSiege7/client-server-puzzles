@@ -158,21 +158,17 @@ int main(int argc, char *argv[]) {
         // convert nonce to hex
         Convert_to_Hex(nonceHex, nonce);
 
-        printf("nonceHex: %s\n", nonceHex);
-
         // concat challenge hex + nonce hex
         int concatLen = challengeLen + strlen(nonceHex);
         char *data = malloc(concatLen);
         strcpy(data, challenge);
         strcat(data, nonceHex);
 
-        //printf("data: %s\n", data);
-
         // convert concat hex to bytes
         int byteLen = concatLen/2;
         char *bytes = malloc(byteLen);
 
-        int temp = Hex_to_Bytes(data, bytes, strlen(data));
+        Hex_to_Bytes(data, bytes, strlen(data));
         
         // compute SHA
         int ok = Compute_SHA256(bytes, byteLen, hash);
